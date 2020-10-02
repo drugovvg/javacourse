@@ -39,7 +39,6 @@ public class Main {
             case 5:
                 System.out.println("Bye!\n");
                 break;
-
             default:
                 throw new IllegalStateException("Unexpected value: " + option);
         }
