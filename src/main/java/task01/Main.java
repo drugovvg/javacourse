@@ -1,3 +1,6 @@
+/**
+ * This is a solution for the Task #1/Lesson #2 where we need to throw different exception intentionally.
+ */
 package task01;
 
 import java.io.BufferedReader;
