@@ -18,7 +18,6 @@ public class Main {
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int option = Integer.parseInt(String.valueOf(br.readLine()));
-
         switch (option) {
             case 1:
 
@@ -40,6 +39,7 @@ public class Main {
             case 5:
                 System.out.println("Bye!\n");
                 break;
+
             default:
                 throw new IllegalStateException("Unexpected value: " + option);
         }
