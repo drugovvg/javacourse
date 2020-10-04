@@ -61,7 +61,7 @@ public class Main {
                 " Stupid engine - " + stupidSortEngine.getLastSortTimeElapsed());
 
         /**
-         * This is the code for checking if have persons with the same name and age in the list.
+         * This is the code for checking if we have persons with the same name and age in the list.
          *
          */
         Map<Pair<String, Integer>, List<Person>> listGroupedByNameAndAge =
