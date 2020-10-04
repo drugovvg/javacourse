@@ -1,12 +1,22 @@
 package task03;
 
+import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+
+/**
+ * Simple and slow (in purpose) sort engine with using bubble sorting.
+ */
 
 public class StupidSortEngine implements SortEngine {
 
+    private long lastSortStartTime;
+    private long lastSortFinishTime;
+
     @Override
     public List<Person> sort(List<Person> personList) {
+        lastSortStartTime = System.nanoTime();
 
         /**
          * Sort everyone by Sex
@@ -20,6 +30,7 @@ public class StupidSortEngine implements SortEngine {
             } else tempMenList.add(person);
         }
 
+
         /**
          * Then Sort everyone by Age
          */
@@ -29,25 +40,22 @@ public class StupidSortEngine implements SortEngine {
         tempList.addAll(tempMenList);
         tempList.addAll(tempWomenList);
 
+
         /**
          * Then Sort everyone Alphabetically
          */
-
-        for (Person person :
-                tempList) {
-            System.out.println(person.getName() + " " + person.getAge() + " " + person.getSex());
-        }
-
         int startCounter = -1;
         int endCounter;
+
         for (int i = 1; i < tempList.size(); i++) {
+
             if (tempList.get(i).getAge() == tempList.get(i - 1).getAge()) {
                 if (startCounter == -1) {
                     startCounter = i - 1;
                 }
             } else {
-                if (startCounter > 0) {
-                    endCounter = i - 1;
+                if (startCounter >= 0) {
+                    endCounter = i;
                     string_bubble_sort(tempList, startCounter, endCounter);
                     startCounter = -1;
                     endCounter = 0;
@@ -55,6 +63,7 @@ public class StupidSortEngine implements SortEngine {
             }
         }
 
+        lastSortFinishTime = System.nanoTime();
         return tempList;
     }
 
@@ -113,7 +122,7 @@ public class StupidSortEngine implements SortEngine {
         for (int i = start; i < inputLength; i++) {
             is_sorted = true;
 
-            for (int j = start + 1; j < (inputLength - i + start + 1); j++) {
+            for (int j = start + 1; j < (inputLength - i + start); j++) {
                 if (ascending) {
                     if (input.get(j - 1).getName().compareToIgnoreCase(input.get(j).getName()) < 0) {
                         temp = input.get(j - 1);
@@ -139,6 +148,15 @@ public class StupidSortEngine implements SortEngine {
 
         }
 
+    }
+
+    /**
+     * Getting last duration of the sort() method in nanoseconds.
+     * @return long
+     */
+    @Override
+    public long getLastSortTimeElapsed(){
+        return lastSortFinishTime - lastSortStartTime;
     }
 
 }

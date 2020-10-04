@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.Function;
 
-
+/**
+ * This class contains some useful methods for list of Person objects
+ */
 public class PersonCollection {
 
     /**

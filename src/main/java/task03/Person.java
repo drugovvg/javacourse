@@ -1,5 +1,8 @@
 package task03;
 
+/**
+ * This class represents a person entity with the main attributes: name, age and sex.
+ */
 public class Person {
     private int age;
     private String name;
@@ -38,4 +41,6 @@ public class Person {
     public void setSex(Sex sex) {
         this.sex = sex;
     }
+
+
 }

@@ -3,6 +3,9 @@ package task03;
 import java.util.Arrays;
 import java.util.Random;
 
+/**
+ * This class represents a sex entity.
+ */
 public class Sex {
     private String sex;
     public static final String MAN = "Man";
