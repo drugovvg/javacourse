@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Simple sort engine based on using of Comparators.
  */
-public class ComparatorSortEngine implements SortEngine{
+public class ComparatorSortEngine implements SortEngine {
 
     private long lastSortStartTime;
     private long lastSortFinishTime;
@@ -30,25 +30,22 @@ public class ComparatorSortEngine implements SortEngine{
     /**
      * Comparator for sorting the list.
      */
-    public static final Comparator<Person> PersonComparator = new Comparator<Person>() {
+    public static final Comparator<Person> PersonComparator = (p1, p2) -> {
 
-        public int compare(Person p1, Person p2) {
-
-            if (p1.getSex().toString() == Sex.MAN && p2.getSex().toString() == Sex.WOMAN) {
-                return -1;
-            } else if (p1.getSex().toString() == Sex.WOMAN && p2.getSex().toString() == Sex.MAN) {
-                return 1;
-            }
-
-            if (p1.getAge() > p2.getAge()) {
-                return -1;
-            } else if (p1.getAge() < p2.getAge()) {
-                return 1;
-            }
-
-            return p1.getName().compareToIgnoreCase(p2.getName());
-
+        if (p1.getSex().toString() == Sex.MAN && p2.getSex().toString() == Sex.WOMAN) {
+            return -1;
+        } else if (p1.getSex().toString() == Sex.WOMAN && p2.getSex().toString() == Sex.MAN) {
+            return 1;
         }
+
+        if (p1.getAge() > p2.getAge()) {
+            return -1;
+        } else if (p1.getAge() < p2.getAge()) {
+            return 1;
+        }
+
+        return p1.getName().compareToIgnoreCase(p2.getName());
+
     };
 
     /**
