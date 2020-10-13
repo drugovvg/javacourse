@@ -1,6 +1,7 @@
 package lesson03.task01;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -15,24 +16,23 @@ public class Main {
         MathBox mathBox = new MathBox(testArray);
 
         /**
-         * Print original content of the aSet in the MathBox and it is sum
+         * Let's test an exception
+         */
+        mathBox.addObject(new Object());
+
+        /**
+         * Print original content of the MathBox and sum it
          */
         System.out.println("Original:");
-        for (Object item :
-                mathBox.aSet) {
-            System.out.println(item);
-        }
+        mathBox.dump();
         System.out.println("Sum:" + mathBox.summator());
 
         /**
          * Let's test removing of an item by value
          */
         System.out.println("After removing 3:");
-        mathBox.remove(3);
-        for (Object item :
-                mathBox.aSet) {
-            System.out.println(item);
-        }
+        mathBox.remove(new Short((short) 3));
+        mathBox.dump();
         System.out.println("Sum:" + mathBox.summator());
 
         /**
@@ -40,11 +40,7 @@ public class Main {
          */
         System.out.println("Splitter:");
         mathBox.splitter(2);
-
-        for (Object item :
-                mathBox.aSet) {
-            System.out.println(item);
-        }
+        mathBox.dump();
 
         /**
          * Let's check overridden methods

@@ -1,29 +1,12 @@
 package lesson03.task01;
 
 import java.util.*;
+import java.util.LinkedList;
 
 /**
- * MathBox is a class with implementation of some simple math methods on aSet HashSet
+ * MathBox is a class with implementation of some simple math methods
  */
-public class MathBox {
-
-    HashSet aSet;
-
-    /**
-     * Getter for the aSet
-     * @return
-     */
-    public HashSet getaSet() {
-        return aSet;
-    }
-
-    /**
-     * Setter for the aSet
-     * @return
-     */
-    public void setaSet(HashSet aSet) {
-        this.aSet = aSet;
-    }
+public class MathBox extends ObjectBox{
 
     /**
      * MathBox constructor
@@ -31,7 +14,7 @@ public class MathBox {
      * @param <T>
      */
     public <T extends Number> MathBox(T[] anArray) {
-        setaSet(new HashSet(Arrays.asList(anArray)));
+        super(new ArrayList<>(Arrays.asList(anArray)));
     }
 
     /**
@@ -39,7 +22,7 @@ public class MathBox {
      * @return sum of the all elements in the aSet
      */
     public double summator() {
-        return getaSet().stream().mapToDouble(num -> Double.valueOf(num.toString())).sum();
+        return getaCollection().stream().mapToDouble(num -> Double.valueOf(num.toString())).sum();
     }
 
     /**
@@ -49,43 +32,53 @@ public class MathBox {
      */
     public <T1 extends Number> void splitter(T1 divider) {
         double doubleDivider = Double.valueOf(divider.toString());
-        double[] doubles = aSet.stream().mapToDouble(num -> {
+        double[] doubles = getaCollection().stream().mapToDouble(num -> {
             return Double.valueOf(num.toString()) / doubleDivider;
         }).toArray();
 
-        aSet.clear();
+        getaCollection().clear();
         for (double aDouble : doubles) {
-            aSet.add(aDouble);
+            getaCollection().add(aDouble);
         }
 
+    }
+
+    /**
+     * Adding an object to the ObjectBox
+     * @param item - an Object to add to the Box
+     * @return boolean - true if it successfully added, false if it is not
+     */
+    public boolean addObject(Object item) {
+        try {
+            if (item != null) throw new IllegalArgumentException();
+        } catch (IllegalArgumentException e) {
+            System.out.println("Putting objects into the MathBox through addObject is not working.");
+            return false;
+        }
+
+        return true;
     }
 
     /**
      * Removing certain element in the aSet by value
-     * @param value - value to searhc and remove
+     * @param value - value to search and remove
+     * @return
      */
-    public void remove(Integer value) {
+    public boolean remove(Object value) {
 
-        Object firstASet = aSet.stream().findFirst().get();
+        return deleteObject(value);
 
-        if(firstASet instanceof Double || firstASet instanceof Float) {
-            aSet.remove(value.doubleValue());
-        } else if (firstASet instanceof Short) {
-            aSet.remove(value.shortValue());
-        } else {
-            aSet.remove(Integer.valueOf(value.toString()));
-        }
     }
 
     /**
      * toString override
-     * @return Resul of concatenation of all items in the aSet
+     * @return Result of concatenation of all items in the aSet
      */
     @Override
     public String toString() {
 
         StringBuilder builder = new StringBuilder();
-        for (Object s : aSet) {
+        for (Object s : getaCollection()) {
             builder.append("," + s.toString());
         }
         builder.deleteCharAt(0);
