@@ -49,13 +49,13 @@ public class MathBox {
      */
     public <T1 extends Number> void splitter(T1 divider) {
         double doubleDivider = Double.valueOf(divider.toString());
-        double[] doubles = aSet.stream().mapToDouble(num -> {
+        double[] doubles = getaSet().stream().mapToDouble(num -> {
             return Double.valueOf(num.toString()) / doubleDivider;
         }).toArray();
 
-        aSet.clear();
+        getaSet().clear();
         for (double aDouble : doubles) {
-            aSet.add(aDouble);
+            getaSet().add(aDouble);
         }
 
     }
@@ -66,14 +66,14 @@ public class MathBox {
      */
     public void remove(Integer value) {
 
-        Object firstASet = aSet.stream().findFirst().get();
+        Object firstASet = getaSet().stream().findFirst().get();
 
         if(firstASet instanceof Double || firstASet instanceof Float) {
-            aSet.remove(value.doubleValue());
+            getaSet().remove(value.doubleValue());
         } else if (firstASet instanceof Short) {
-            aSet.remove(value.shortValue());
+            getaSet().remove(value.shortValue());
         } else {
-            aSet.remove(Integer.valueOf(value.toString()));
+            getaSet().remove(Integer.valueOf(value.toString()));
         }
     }
 
@@ -85,7 +85,7 @@ public class MathBox {
     public String toString() {
 
         StringBuilder builder = new StringBuilder();
-        for (Object s : aSet) {
+        for (Object s : getaSet()) {
             builder.append("," + s.toString());
         }
         builder.deleteCharAt(0);
