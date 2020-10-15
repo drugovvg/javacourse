@@ -1,11 +1,22 @@
 package part01.lesson05.task01;
 
+/**
+ * Pet entity
+ */
 public class Pet {
     private Integer id;
     private String name;
     private Float weight;
     private Person owner;
 
+    /**
+     * Constructor
+     *
+     * @param id - pet's id
+     * @param name - pet's name
+     * @param weight - pet's weight
+     * @param owner - pet's owner
+     */
     public Pet(Integer id, String name, Float weight, Person owner) {
         setId(id);
         setName(name);
@@ -45,5 +56,13 @@ public class Pet {
         this.owner = owner;
     }
 
-
+    @Override
+    public String toString() {
+        return "Pet{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", weight=" + weight +
+                ", owner=" + owner +
+                '}';
+    }
 }
