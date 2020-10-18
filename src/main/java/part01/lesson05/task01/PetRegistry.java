@@ -11,22 +11,22 @@ public class PetRegistry {
      * We plan to have all the animals constantly sorted by owner's name, pet's name and pet's weight. So, we are using
      * TreeSet with a comparator.
      */
-    private final Set<Pet> animals = new TreeSet<Pet>(new Comparator<Pet>() {
+    private final Set<Pet> animals = new TreeSet<>(new Comparator<Pet>() {
         @Override
         public int compare(Pet p1, Pet p2) {
-            if(p1.getOwner().getName().trim().compareTo(p2.getOwner().getName().trim()) == 1){
+            if (p1.getOwner().getName().trim().compareTo(p2.getOwner().getName().trim()) == 1) {
                 return 1;
             } else if (p1.getOwner().getName().trim().compareTo(p2.getOwner().getName().trim()) == -1) {
                 return -1;
             }
 
-            if(p1.getName().trim().compareTo(p2.getName().trim()) == 1){
+            if (p1.getName().trim().compareTo(p2.getName().trim()) == 1) {
                 return 1;
             } else if (p1.getName().trim().compareTo(p2.getName().trim()) == -1) {
                 return -1;
             }
 
-            if(p1.getWeight() > p2.getWeight()){
+            if (p1.getWeight() > p2.getWeight()) {
                 return 1;
             } else if (p1.getWeight() < p2.getWeight()) {
                 return -1;
@@ -37,6 +37,11 @@ public class PetRegistry {
         }
     });
 
+    private NavigableMap<String, Pet> animalsNameMap = new TreeMap<>();
+    private NavigableMap<Integer, Pet> animalsIdMap  = new TreeMap<>();
+
+
+
 
     /**
      * Adding a Pet to the registry
@@ -45,6 +50,8 @@ public class PetRegistry {
     public void add(Pet pet){
         try {
             if (!animals.add(pet)) throw new IllegalArgumentException();
+            animalsIdMap.put(pet.getId(), pet);
+            animalsNameMap.put(pet.getName(), pet);
         } catch (IllegalArgumentException e) {
             System.out.println("Sorry, we already have this Pet in the registry: " + pet);
         }
@@ -57,11 +64,8 @@ public class PetRegistry {
      */
     public Pet searchByName(String name){
 
-        List<Pet> animalsList = new ArrayList<Pet>(animals);
-
-        int foundElementId = binarySearchByName(name, animalsList);
-        if (foundElementId != -1) {
-            return animalsList.get(foundElementId);
+        if(animalsNameMap.containsKey(name)) {
+            return animalsNameMap.get(name);
         }
 
         return null;
@@ -77,74 +81,23 @@ public class PetRegistry {
      */
     public boolean changePetsDataById(Integer id, String name, Float weight, Person owner) {
 
-        List<Pet> animalsList = new ArrayList<Pet>(animals);
-
-        int foundElementId = binarySearchById(id, animalsList);
-        if (foundElementId != -1) {
-            animalsList.set(foundElementId, new Pet(id, name, weight, owner));
-            animals.clear();
-            animals.addAll(animalsList);
-            return true;
+        if (!animalsIdMap.containsKey(id)) {
+            return false;
         }
 
-        return false;
+        Pet oldPet = animalsIdMap.get(id);
+        Pet newPet = new Pet(id, name, weight, owner);
+
+        animals.remove(oldPet);
+        animals.add(newPet);
+
+        animalsIdMap.replace(id, newPet);
+        animalsNameMap.replace(name, newPet);
+
+        return true;
+
     }
 
-    /**
-     * Binary search by id
-     * @param id - pet's id
-     * @param animalsList - pet's list
-     * @return index of the pet in the list, -1 if id is not found
-     */
-    private int binarySearchById(Integer id, List<Pet> animalsList) {
-        int firstIndex = 0;
-        int lastIndex = animalsList.size() - 1;
-
-
-        while(firstIndex <= lastIndex) {
-            int middleIndex = (firstIndex + lastIndex) / 2;
-
-            if (animalsList.get(middleIndex).getId().equals(id)) {
-                return middleIndex;
-            }
-
-            else if (animalsList.get(middleIndex).getId() < id)
-                firstIndex = middleIndex + 1;
-
-            else if (animalsList.get(middleIndex).getId() > id)
-                lastIndex = middleIndex - 1;
-
-        }
-        return -1;
-    }
-
-    /**
-     * Binary search by name
-     * @param name - pet's name
-     * @param animalsList - pet's list
-     * @return index of the pet in the list, -1 if name is not found
-     */
-    private int binarySearchByName(String name, List<Pet> animalsList) {
-        int firstIndex = 0;
-        int lastIndex = animalsList.size() - 1;
-
-        while(firstIndex <= lastIndex) {
-            int middleIndex = (firstIndex + lastIndex) / 2;
-
-            if (animalsList.get(middleIndex).getName().equals(name)) {
-                return middleIndex;
-            }
-
-            else if (animalsList.get(middleIndex).getName().compareTo(name) < 0)
-
-                firstIndex = middleIndex + 1;
-
-            else if (animalsList.get(middleIndex).getName().compareTo(name) > 0)
-                lastIndex = middleIndex - 1;
-
-        }
-        return -1;
-    }
 
     /**
      * Print all the pet registry entries.
