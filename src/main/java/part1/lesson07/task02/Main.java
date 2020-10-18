@@ -26,7 +26,7 @@ public class Main {
     public static void getFiles(String path, int n, int size, String[] words, int probability) {
 
         for (int i = 0; i < n; i++) {
-            String fullPath = path + "generated_file_" + Integer.toString(i) + ".txt";
+            String fullPath = path + "generated_file_" + i + ".txt";
             getFile(fullPath, size, words, probability);
             System.out.println(fullPath + " is generated.");
         }
