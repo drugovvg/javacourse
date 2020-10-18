@@ -45,7 +45,7 @@ public class Main {
                 String word = iterator.next();
                 if (word.length() > 0) {
                     bos.write(word.getBytes());
-                    if(iterator.hasNext()) {
+                    if (iterator.hasNext()) {
                         bos.write("\n".getBytes());
                     }
                 }
