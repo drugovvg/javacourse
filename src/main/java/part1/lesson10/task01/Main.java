@@ -45,13 +45,13 @@ public class Main {
             String previousLine = "";
             while (scanner.hasNextLine()) {
                 String nextLine = scanner.nextLine();
-                if(previousLine.contains("void doWork() {")){ // let's put the console entered code right into the doWork() method
+                if (previousLine.contains("void doWork() {")) { // let's put the console entered code right into the doWork() method
                     for (String string : lines) {
                         linesBuffer.add(string);
                     }
                 }
-               previousLine = nextLine;
-               linesBuffer.add(nextLine);
+                previousLine = nextLine;
+                linesBuffer.add(nextLine);
             }
             scanner.close();
         } catch (FileNotFoundException e) {
@@ -89,8 +89,8 @@ public class Main {
         Let's load SomeClass and create an instance of the class
          */
         ClassLoader loader;
-        loader= new DynamicClassLoader(dir);
-        Class newClass= null;
+        loader = new DynamicClassLoader(dir);
+        Class newClass = null;
         try {
             newClass = Class.forName("SomeClass", true,
                     loader);
@@ -100,7 +100,7 @@ public class Main {
 
         Worker testWorker = null;
         try {
-            testWorker = (Worker)newClass.newInstance();
+            testWorker = (Worker) newClass.newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
