@@ -3,13 +3,34 @@ package part1.lesson11.task01;
 import java.net.InetAddress;
 import java.util.Objects;
 
+/**
+ * This class implements server's client entity, so we can keep information about it's hostname, port and nickname.
+ * It also contains hashcode and equals methods which is NOT based on nickname, only port and hostname matters.
+ */
 class Client {
     private String name;
     private InetAddress address;
     private int port;
 
+    /**
+     * Constructor
+     * @param address hostname of the client
+     * @param port port of the client
+     */
     public Client(InetAddress address, int port) {
         this.name = null;
+        this.address = address;
+        this.port = port;
+    }
+
+    /**
+     * Constructor
+     * @param name nickname of the client
+     * @param address hostname of the client
+     * @param port port of the client
+     */
+    public Client(String name, InetAddress address, int port) {
+        this.name = name;
         this.address = address;
         this.port = port;
     }
@@ -35,12 +56,6 @@ class Client {
     }
 
     public void setPort(int port) {
-        this.port = port;
-    }
-
-    public Client(String name, InetAddress address, int port) {
-        this.name = name;
-        this.address = address;
         this.port = port;
     }
 

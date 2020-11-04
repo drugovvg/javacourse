@@ -6,8 +6,13 @@ import java.io.InputStreamReader;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
+/**
+ * This program implements a simple text chat. Firstly you should start one instance of the
+ * program in the server mode. Then you can start other instances in the Client mode.
+ * Clients can send broadcast messages and direct messages.
+ */
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
 
         System.out.println("" +
                 "This is a simple chat application.\n" +
@@ -21,73 +26,63 @@ public class Main {
         option = Integer.parseInt(String.valueOf(br.readLine()));
 
         switch (option) {
-            case 1:
-                QuoteServerThread quoteServerThread = new QuoteServerThread();
-                quoteServerThread.start();
+            case 1: // Server mode
+                ServerThread serverThread = new ServerThread();
+                serverThread.start();
 
                 System.out.println("Server is started. Server address:");
-//                System.out.println(quoteServerThread.isAlive());
 
                 DatagramSocket socket = new DatagramSocket();
                 socket.connect(InetAddress.getByName("8.8.8.8"), 4445);
                 System.out.println(socket.getLocalAddress().getHostAddress() + ":4445");
 
-//                while (true){
-//                    System.out.println("-");
-//                    if (String.valueOf(br.readLine()) != null) {
-//                        quoteServerThread.pause();
-//                        String input = String.valueOf(br.readLine());
-//                        if(input != null) {
-//                            System.out.println("Input:" + input);
-//                            quoteServerThread.unpause();
-//                        }
-//                    }
-//                }
-//
                 break;
-            case 2:
-                System.out.println("Please enter a hostname of your chat server:");
+            case 2: // Client mode
+                System.out.println("Please enter a hostname of your chat server. Press enter to use 'localhost'.");
                 String hostname = String.valueOf(br.readLine());
 
-                if (hostname.length() <= 0) hostname = "localhost";
+                if (hostname.length() <= 0) {
+                    hostname = "localhost";
+                }
 
                 ClientThread clientThread = new ClientThread(hostname);
                 clientThread.start();
 
+                boolean consoleInputFlag = true; // We need to stop main thread sometimes
+                while (consoleInputFlag) {
+                    Thread.sleep(500);
 
-//
-//                clientThread.invokeHelloDialogue();
-//
-                System.out.println("Press enter to send a new message.");
-                boolean consoleInputFlag = true;
-                while (consoleInputFlag){
-//                    System.out.println(".");
-                    // TODO add this to another thread and add 1sec delay
-                    if(clientThread.isConsoleInputEnabled()) {
-                        // System.out.println("-");
+                    /*
+                    We have console input in the client thread
+                    so we need to disable the console input in the main thread
+                    to prevent conflicts.
+                     */
+                    if (clientThread.isConsoleInputEnabled()) {
                         if (String.valueOf(br.readLine()) != null) {
                             clientThread.pausePrintServerMessages();
-                            System.out.println("You can use '@name:' construct to send direct messages. Message:");
+                            System.out.println("You can use '@name,' syntax to send direct messages. Message:");
                             String input = String.valueOf(br.readLine());
+
+                            /*
+                            Quit command implementation. It sends a command to the server, so
+                            the server frees up a name of the user on the server.
+                             */
                             if (input.equals("quit")) {
+                                clientThread.sendByeMessage();
                                 System.out.println("Bye!");
-                                // TODO send a command to the server
                                 consoleInputFlag = false;
                             } else if (input != null) {
-
                                 clientThread.sendAMessage(input);
-                                // System.out.println("Input:" + input);
-                                clientThread.unpausePrintServerMessages();
                                 System.out.println("Message is sent. Press enter to send a new message.");
+                                clientThread.unpausePrintServerMessages();
                             }
                         }
                     }
 
-
                 }
 
                 break;
-            case 5:
+            case 3:
                 System.out.println("Bye!\n");
                 break;
             default:

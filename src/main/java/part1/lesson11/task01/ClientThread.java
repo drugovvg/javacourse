@@ -1,6 +1,5 @@
 package part1.lesson11.task01;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -11,6 +10,10 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class implements a thread and some methods to send and receive
+ * messages to specific chat server with using of a predefined protocol.
+ */
 public class ClientThread extends Thread {
 
     protected DatagramSocket socket = null;
@@ -18,12 +21,24 @@ public class ClientThread extends Thread {
     protected boolean printServerMessages = true;
     protected boolean consoleInputEnabled = false;
     protected List<String> bufServerMessages = new ArrayList<>();
-    protected List<String> bufToServerMessages = new ArrayList<>();
 
+    /**
+     * Constructor
+     *
+     * @param hostname hostname of the server you want to connect with
+     * @throws IOException
+     */
     public ClientThread(String hostname) throws IOException {
         this("ClientThread", hostname);
     }
 
+    /**
+     * Constructor
+     *
+     * @param name     thread name
+     * @param hostname hostname of the server you want to connect with
+     * @throws IOException
+     */
     public ClientThread(String name, String hostname) throws IOException {
         super(name);
         socket = new DatagramSocket();
@@ -33,11 +48,15 @@ public class ClientThread extends Thread {
     public void run() {
         while (true) {
             byte[] buf = new byte[256];
+
+            // Initiate connection to the server
             InetAddress address = null;
             try {
                 address = InetAddress.getByName(serverHostname);
             } catch (UnknownHostException e) {
-                e.printStackTrace();
+                setConsoleInputDisabled();
+                System.out.println("Please check server's host name again.");
+                break;
             }
 
             DatagramPacket packet = new DatagramPacket(buf, buf.length, address, 4445);
@@ -48,7 +67,7 @@ public class ClientThread extends Thread {
                 e.printStackTrace();
             }
 
-            // get response
+            // Get response
             packet = new DatagramPacket(buf, buf.length);
             try {
                 socket.receive(packet);
@@ -56,18 +75,20 @@ public class ClientThread extends Thread {
                 e.printStackTrace();
             }
 
-            // display response
             String received = new String(packet.getData(), 0, packet.getLength());
+//            System.out.println(received);
 
-            System.out.println("Original:" + received);
-
+            /*
+            In case we have a user entering something in the console we should pause printing
+            received messages, put them into a buffer and print it later.
+            */
             if (printServerMessages) {
 
-                    try {
-                        processServerMessage(received);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                try {
+                    processServerMessage(received);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             } else {
                 bufServerMessages.add(received);
@@ -76,43 +97,36 @@ public class ClientThread extends Thread {
         }
     }
 
-    public void processServerMessage(String message) throws IOException {
-        if (message.startsWith(QuoteServerThread.CODE_HELLO_RESPONSE_NAME_DUPLICATE)) {
-            System.out.println(message.substring(QuoteServerThread.CODE_HELLO_RESPONSE_NAME_DUPLICATE.length()));
+    /**
+     * Process server messages in according to the protocol.
+     * @param message server message
+     * @throws IOException
+     */
+    private void processServerMessage(String message) throws IOException {
+        if (message.startsWith(ServerThread.CODE_HELLO_RESPONSE_NAME_DUPLICATE)) {
+            System.out.println(message.substring(ServerThread.CODE_HELLO_RESPONSE_NAME_DUPLICATE.length()));
             invokeHelloDialogue();
-        } else if (message.startsWith(QuoteServerThread.CODE_HELLO_INITIATE)) {
+        } else if (message.startsWith(ServerThread.CODE_HELLO_INITIATE)) {
             setConsoleInputDisabled();
             invokeHelloDialogue();
-        } else if (message.startsWith(QuoteServerThread.CODE_HELLO_SUCCESS)) {
-            System.out.println(message.substring(QuoteServerThread.CODE_HELLO_SUCCESS.length()));
+        } else if (message.startsWith(ServerThread.CODE_HELLO_SUCCESS)) {
+            System.out.println(message.substring(ServerThread.CODE_HELLO_SUCCESS.length()));
             setConsoleInputEnabled();
         } else {
             System.out.println(message);
-//            BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-//            if (String.valueOf(br.readLine()) != null) {
-//                pausePrintServerMessages();
-//                System.out.println("You can use '@name,' construct to send direct messages. Message:");
-//                String input = String.valueOf(br.readLine());
-////                if(input == "quit") {
-////                    System.out.println("Bye!\n");
-////                    break;
-////                } else
-//                if(input != null) {
-//
-//                    sendAMessage(input);
-//                    // System.out.println("Input:" + input);
-//                    unpausePrintServerMessages();
-//                    System.out.println("Message is sent. Press enter to send a new message.");
-//                }
-//            }
-
         }
     }
 
+    /**
+     * Pause printing server massages.
+     */
     public void pausePrintServerMessages() {
         printServerMessages = false;
     }
 
+    /**
+     * Unpause printing server massages and print all the messages received since it is paused.
+     */
     public void unpausePrintServerMessages() {
         printServerMessages = true;
         if (!bufServerMessages.isEmpty()) {
@@ -127,29 +141,54 @@ public class ClientThread extends Thread {
         }
     }
 
+    /**
+     * Pause console input in the main thread
+     */
     public void setConsoleInputEnabled() {
         consoleInputEnabled = true;
-        System.out.println("setConsoleInputEnabled");
     }
 
+    /**
+     * Unpause console input in the main thread
+     */
     public void setConsoleInputDisabled() {
         consoleInputEnabled = false;
-        System.out.println("setConsoleInputDisabled");
     }
 
+    /**
+     * Check procedure for the console input for the main thread
+     */
     public boolean isConsoleInputEnabled() {
-        System.out.println("isEndabled"+consoleInputEnabled);
         return consoleInputEnabled;
     }
 
+    /**
+     * Send user's nickname to a server
+     * @param userName nickname
+     */
     public void sendHelloMessage(String userName) {
-        sendMessage(QuoteServerThread.CODE_HELLO + userName);
+        sendMessage(ServerThread.CODE_HELLO + userName);
     }
 
+    /**
+     * Send to a server information that this client is no longer active and the server can free up appropriate nickname.
+     */
+    public void sendByeMessage() {
+        sendMessage(ServerThread.CODE_BYE_TO_SERVER);
+    }
+
+    /**
+     * Send a regular text message to all or specific users.
+     * @param message text message
+     */
     public void sendAMessage(String message) {
-        sendMessage(QuoteServerThread.CODE_BROADCAST_MESSAGE + message);
+        sendMessage(ServerThread.CODE_BROADCAST_MESSAGE + message);
     }
 
+    /**
+     * Send a message to the server
+     * @param message message
+     */
     private void sendMessage(String message) {
         InetAddress address = null;
         try {
@@ -169,13 +208,12 @@ public class ClientThread extends Thread {
     }
 
     public void invokeHelloDialogue() throws IOException {
-
         BufferedReader brd = new BufferedReader(new InputStreamReader(System.in));
         pausePrintServerMessages();
         System.out.println("Please enter your name:");
         String userName = String.valueOf(brd.readLine());
-        sendHelloMessage(userName);
         unpausePrintServerMessages();
+        sendHelloMessage(userName);
 
     }
 
