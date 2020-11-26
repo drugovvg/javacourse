@@ -1,4 +1,4 @@
-package part1.lessons14_.WebStore.Customer;
+package part1.lessons14_.web.store.customer;
 
 public class CustomerImpl implements Customer {
 }

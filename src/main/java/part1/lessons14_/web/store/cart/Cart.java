@@ -1,10 +1,8 @@
-    package part1.lessons14_.WebStore.Cart;
+    package part1.lessons14_.web.store.cart;
 
-import part1.lessons14_.WebStore.Order.Order;
-import part1.lessons14_.WebStore.Product.Product;
+import part1.lessons14_.web.store.product.Product;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
 
 public interface Cart {

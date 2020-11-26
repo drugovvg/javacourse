@@ -1,10 +1,10 @@
-package part1.lessons14_.WebStore.Order;
+package part1.lessons14_.web.store.order;
 
 import java.math.BigDecimal;
 
-public class FreeShippingZoneOrder extends OrderDecorator {
+public class EuropeShippingZoneOrder extends OrderDecorator {
 
-    public FreeShippingZoneOrder(Order _order){
+    public EuropeShippingZoneOrder(Order _order){
         super(_order);
     }
 
@@ -20,12 +20,12 @@ public class FreeShippingZoneOrder extends OrderDecorator {
 
     @Override
     public BigDecimal getShippingPrice(){
-        return BigDecimal.valueOf(0);
+        return order.getShippingPrice().multiply(BigDecimal.valueOf(1.15));
     }
 
     @Override
     public BigDecimal getTax(){
-        return BigDecimal.valueOf(0);
+        return order.getTax().multiply(BigDecimal.valueOf(1.1));
     }
 
 }

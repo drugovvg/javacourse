@@ -1,4 +1,4 @@
-package part1.lessons14_.WebStore.Order;
+package part1.lessons14_.web.store.order;
 
 import java.math.BigDecimal;
 

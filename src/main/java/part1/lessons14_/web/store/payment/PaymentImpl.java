@@ -1,4 +1,4 @@
-package part1.lessons14_.WebStore.Payment;
+package part1.lessons14_.web.store.payment;
 
 public class PaymentImpl implements Payment {
 }

@@ -1,4 +1,4 @@
-package part1.lessons14_.WebStore.Product;
+package part1.lessons14_.web.store.product;
 
 import java.math.BigDecimal;
 

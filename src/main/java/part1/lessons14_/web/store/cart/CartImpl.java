@@ -1,12 +1,9 @@
-package part1.lessons14_.WebStore.Cart;
+package part1.lessons14_.web.store.cart;
 
-import part1.lessons14_.WebStore.Order.Order;
-import part1.lessons14_.WebStore.Product.Product;
+import part1.lessons14_.web.store.product.Product;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 public class CartImpl implements Cart {
 
@@ -92,6 +89,39 @@ public class CartImpl implements Cart {
         this.setArchived(true);
     }
 
+    public static class CartImplBuilder {
+        private Integer id;
+        private Integer customerId;
+        private Map<Integer, ProductCartItem> productCartItemMap;
+        private boolean archived;
 
+        public CartImplBuilder withId(Integer id) {
+            this.id = id;
+            return this;
+        }
+
+        public CartImplBuilder withCustomerId(Integer customerId) {
+            this.customerId = customerId;
+            return this;
+        }
+
+        public CartImplBuilder withProductCartItemMap(Map<Integer, ProductCartItem> productCartItemMap) {
+            this.productCartItemMap = productCartItemMap;
+            return this;
+        }
+
+        public CartImplBuilder withArchived(boolean archived) {
+            this.archived = archived;
+            return this;
+        }
+
+        public CartImpl build() {
+            return new CartImpl(id, customerId, productCartItemMap, archived);
+        }
+    }
+
+    public static CartImplBuilder builder(){
+        return new CartImplBuilder();
+    }
 
 }

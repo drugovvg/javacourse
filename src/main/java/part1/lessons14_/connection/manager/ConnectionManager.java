@@ -1,4 +1,4 @@
-package part1.lessons14_.ConnectionManager;
+package part1.lessons14_.connection.manager;
 
 import java.sql.Connection;
 
