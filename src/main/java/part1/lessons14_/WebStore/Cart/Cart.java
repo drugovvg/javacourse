@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-    public interface Cart {
+public interface Cart {
 
     public Map<Integer, ProductCartItem> getProductCartItemMap();
 
@@ -19,6 +19,5 @@ import java.util.Map;
 
     public void archive();
 
-    public Order convertToOrder();
 
 }

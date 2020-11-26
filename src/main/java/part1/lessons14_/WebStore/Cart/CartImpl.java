@@ -6,6 +6,7 @@ import part1.lessons14_.WebStore.Product.Product;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 public class CartImpl implements Cart {
 
@@ -80,14 +81,17 @@ public class CartImpl implements Cart {
     }
 
     public BigDecimal getSubTotal() {
-        return null;
+        BigDecimal sum = new BigDecimal(0);
+        this.getProductCartItemMap().forEach((k, v) -> {
+            sum.add(v.getProduct().getPrice().multiply(new BigDecimal(v.getQty())));
+        });
+        return sum;
     }
 
     public void archive() {
-
+        this.setArchived(true);
     }
 
-    public Order convertToOrder() {
-        return null;
-    }
+
+
 }
