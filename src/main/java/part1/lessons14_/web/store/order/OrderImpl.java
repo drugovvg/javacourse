@@ -64,7 +64,6 @@ public class OrderImpl implements Order {
         return BigDecimal.valueOf(0);
     }
 
-
     public BigDecimal getSubTotal() {
         return BigDecimal.valueOf(0);
     }

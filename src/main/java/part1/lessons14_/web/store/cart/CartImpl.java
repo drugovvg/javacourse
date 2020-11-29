@@ -12,11 +12,11 @@ public class CartImpl implements Cart {
     private Map<Integer, ProductCartItem> productCartItemMap;
     private boolean archived;
 
-    public CartImpl(Integer id, Integer customerId, Map<Integer, ProductCartItem> productCartItemMap, boolean archived) {
-        this.id = id;
-        this.customerId = customerId;
-        this.productCartItemMap = productCartItemMap;
-        this.archived = archived;
+    public CartImpl(Builder builder) {
+        id = builder.id;
+        customerId = builder.customerId;
+        productCartItemMap =  builder.productCartItemMap;
+        archived = builder.archived;
     }
 
     public Integer getId() {
@@ -89,39 +89,49 @@ public class CartImpl implements Cart {
         this.setArchived(true);
     }
 
-    public static class CartImplBuilder {
+    @Override
+    public String toString() {
+        return "CartImpl{" +
+                "id=" + id +
+                ", customerId=" + customerId +
+                ", productCartItemMap=" + productCartItemMap +
+                ", archived=" + archived +
+                '}';
+    }
+
+    public static class Builder {
         private Integer id;
         private Integer customerId;
         private Map<Integer, ProductCartItem> productCartItemMap;
         private boolean archived;
 
-        public CartImplBuilder withId(Integer id) {
+        public Builder withId(Integer id) {
             this.id = id;
             return this;
         }
 
-        public CartImplBuilder withCustomerId(Integer customerId) {
+        public Builder withCustomerId(Integer customerId) {
             this.customerId = customerId;
             return this;
         }
 
-        public CartImplBuilder withProductCartItemMap(Map<Integer, ProductCartItem> productCartItemMap) {
+        public Builder withProductCartItemMap(Map<Integer, ProductCartItem> productCartItemMap) {
             this.productCartItemMap = productCartItemMap;
             return this;
         }
 
-        public CartImplBuilder withArchived(boolean archived) {
+        public Builder withArchived(boolean archived) {
             this.archived = archived;
             return this;
         }
 
         public CartImpl build() {
-            return new CartImpl(id, customerId, productCartItemMap, archived);
+            return new CartImpl(this);
         }
     }
 
-    public static CartImplBuilder builder(){
-        return new CartImplBuilder();
+    public static Builder builder(){
+        return new Builder();
     }
 
 }
